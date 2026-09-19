@@ -192,6 +192,7 @@ function initBookingForm() {
   const successPanel = document.getElementById("bookingSuccess");
   const submitBtn = document.getElementById("bookingSubmit");
   const bookAnother = document.getElementById("bookAnother");
+  const formError = document.getElementById("bookingFormError");
 
   const fields = {
     name: { input: document.getElementById("fullName"), error: document.getElementById("err-name") },
@@ -232,20 +233,36 @@ function initBookingForm() {
     return valid;
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
+    formError.textContent = "";
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending...";
 
-    setTimeout(() => {
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.errors?.[0]?.message || "Unable to send your booking request.");
+      }
+
       submitBtn.disabled = false;
       submitBtn.textContent = "Book Appointment";
       form.reset();
       form.style.display = "none";
       successPanel.classList.add("show");
-    }, 900);
+    } catch (error) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Book Appointment";
+      formError.textContent = error.message;
+    }
   });
 
   bookAnother.addEventListener("click", () => {

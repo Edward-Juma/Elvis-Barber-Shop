@@ -323,7 +323,7 @@
         </div>
 
         <div class="booking-panel reveal">
-          <form id="bookingForm" novalidate>
+          <form id="bookingForm" action="https://formspree.io/f/moevjawv" method="POST" novalidate>
             <div class="form-row">
               <div class="form-group">
                 <label for="fullName">Full Name</label>
@@ -379,6 +379,7 @@
               <textarea id="notes" name="notes" rows="3" placeholder="Anything your barber should know?"></textarea>
             </div>
 
+            <p id="bookingFormError" class="error-msg" role="alert"></p>
             <button type="submit" class="btn btn-gold btn-block btn-lg" id="bookingSubmit">Book Appointment</button>
           </form>
 
